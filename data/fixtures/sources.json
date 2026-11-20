@@ -1,0 +1,4 @@
+[
+  { "id": "ms-brasil", "name": "Ministério da Saúde", "kind": "official", "status": "demo", "url": "https://www.gov.br/saude/pt-br", "lastSuccessAt": "2026-11-20T10:00:00-03:00" },
+  { "id": "news-rss", "name": "Fontes de notícias", "kind": "news", "status": "demo", "url": "https://agenciabrasil.ebc.com.br/saude", "lastSuccessAt": "2026-11-20T10:00:00-03:00" }
+]

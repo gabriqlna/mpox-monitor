@@ -1,0 +1,4 @@
+[
+  { "id": "news-1", "title": "Boletim de vigilância acompanha situação de mpox no país", "publisher": "Ministério da Saúde", "url": "https://www.gov.br/saude/pt-br", "publishedAt": "2026-11-19T14:00:00-03:00", "collectedAt": "2026-11-20T10:00:00-03:00", "summary": "Atualização sobre vigilância, prevenção e orientação aos serviços de saúde.", "verificationStatus": "official-context", "sourceId": "ms-brasil" },
+  { "id": "news-2", "title": "Estados reforçam orientação para identificação e atendimento", "publisher": "Agência Brasil", "url": "https://agenciabrasil.ebc.com.br/saude", "publishedAt": "2026-11-18T09:30:00-03:00", "collectedAt": "2026-11-20T10:00:00-03:00", "summary": "Notícia coletada para acompanhamento. Seu conteúdo não altera os números do painel.", "verificationStatus": "unconfirmed", "sourceId": "news-rss" }
+]
