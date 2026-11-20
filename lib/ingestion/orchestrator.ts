@@ -1,6 +1,7 @@
 import { fixtureNews, fixtureObservations } from "@/lib/data";
 import { config } from "@/lib/config";
 import { fetchOfficialObservations, SOURCE_ID, SOURCE_URL } from "@/lib/ingestion/official-source";
+import { fetchLiveNews, createNewsSource } from "@/lib/ingestion/news-source";
 import { persistIngestion } from "@/lib/db/repositories";
 import type { Source } from "@/lib/types";
 
@@ -13,12 +14,28 @@ export interface IngestionResult {
 
 export async function runIngestion(): Promise<IngestionResult> {
   const startedAt = new Date().toISOString();
-  const observations = config.dataMode === "live" ? await fetchOfficialObservations() : fixtureObservations;
-  const news = config.dataMode === "live" ? [] : fixtureNews;
-  if (config.dataMode === "live") {
-    const source: Source = { id: SOURCE_ID, name: "Ministério da Saúde · e-SUS Sinan/Mpox", kind: "official", status: "active", url: SOURCE_URL, lastSuccessAt: startedAt };
-    await persistIngestion(source, observations, news, startedAt);
+  const isLive = config.dataMode === "live";
+
+  const [observations, news] = isLive
+    ? await Promise.all([fetchOfficialObservations(), fetchLiveNews(25)])
+    : [fixtureObservations, fixtureNews];
+
+  if (isLive) {
+    const officialSource: Source = {
+      id: SOURCE_ID,
+      name: "Ministério da Saúde · e-SUS Sinan/Mpox",
+      kind: "official",
+      status: "active",
+      url: SOURCE_URL,
+      lastSuccessAt: startedAt,
+    };
+    const sources: Source[] = [officialSource];
+    if (news.length > 0) {
+      sources.push(createNewsSource(startedAt));
+    }
+    await persistIngestion(sources, observations, news, startedAt);
   }
+
   const result = {
     observations: observations.length,
     news: news.length,

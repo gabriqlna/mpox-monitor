@@ -34,9 +34,24 @@ function toSource(row: Record<string, unknown>): Source {
   return { id: String(row.id), name: String(row.name), kind: row.kind as Source["kind"], status: row.status as Source["status"], url: String(row.url), lastSuccessAt: String(row.last_success_at) };
 }
 
-export async function persistIngestion(source: Source, observations: Observation[], news: NewsItem[], startedAt: string) {
+function toNewsItem(row: Record<string, unknown>): NewsItem {
+  return {
+    id: String(row.id),
+    sourceId: String(row.source_id),
+    title: String(row.title),
+    publisher: String(row.publisher),
+    url: String(row.url),
+    summary: String(row.summary),
+    publishedAt: String(row.published_at),
+    collectedAt: String(row.collected_at),
+    verificationStatus: (row.verification_status as NewsItem["verificationStatus"]) ?? "unconfirmed",
+  };
+}
+
+export async function persistIngestion(source: Source | Source[], observations: Observation[], news: NewsItem[], startedAt: string) {
   const db = getSupabaseAdmin();
-  const { error: sourceError } = await db.from("sources").upsert(sourceRow(source));
+  const sourceList = Array.isArray(source) ? source : [source];
+  const { error: sourceError } = await db.from("sources").upsert(sourceList.map(sourceRow));
   if (sourceError) throw sourceError;
   const { error: observationError } = await db.from("observations").upsert(observations.map(observationRow), { onConflict: "id" });
   if (observationError) throw observationError;
@@ -44,7 +59,8 @@ export async function persistIngestion(source: Source, observations: Observation
     const { error: newsError } = await db.from("news_items").upsert(news.map((item) => ({ id: item.id, source_id: item.sourceId, title: item.title, publisher: item.publisher, url: item.url, summary: item.summary, published_at: item.publishedAt, collected_at: item.collectedAt, verification_status: item.verificationStatus })), { onConflict: "id" });
     if (newsError) throw newsError;
   }
-  const { error: runError } = await db.from("ingestion_runs").insert({ source_id: source.id, started_at: startedAt, finished_at: new Date().toISOString(), status: "success", records_seen: observations.length + news.length, records_inserted: observations.length + news.length });
+  const primarySourceId = sourceList[0]?.id ?? "system";
+  const { error: runError } = await db.from("ingestion_runs").insert({ source_id: primarySourceId, started_at: startedAt, finished_at: new Date().toISOString(), status: "success", records_seen: observations.length + news.length, records_inserted: observations.length + news.length });
   if (runError) throw runError;
 }
 
@@ -58,5 +74,5 @@ export async function readLiveData() {
   if (observations.error) throw observations.error;
   if (sources.error) throw sources.error;
   if (news.error) throw news.error;
-  return { observations: observations.data.map(toObservation), sources: sources.data.map(toSource), news: news.data as NewsItem[] };
+  return { observations: observations.data.map(toObservation), sources: sources.data.map(toSource), news: news.data.map(toNewsItem) };
 }

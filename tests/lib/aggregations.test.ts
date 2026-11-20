@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { fixtureObservations } from "@/lib/data";
-import { latestCollection, stateSummaries, totalCases, uniqueStates } from "@/lib/aggregations";
+import { latestCollection, regionalSummaries, stateSummaries, totalCases, uniqueMunicipalitiesCount, uniqueStates } from "@/lib/aggregations";
 
 describe("agregações do painel", () => {
   it("soma apenas casos confirmados por estado", () => {
@@ -17,5 +17,17 @@ describe("agregações do painel", () => {
 
   it("retorna a coleta mais recente", () => {
     expect(latestCollection(fixtureObservations)).toBe("2026-11-20T10:00:00-03:00");
+  });
+
+  it("agrega casos por macrorregião", () => {
+    const regions = regionalSummaries(fixtureObservations);
+    expect(regions.length).toBeGreaterThanOrEqual(5);
+    const sudeste = regions.find((r) => r.region === "Sudeste");
+    expect(sudeste).toBeDefined();
+    expect(sudeste?.cases).toBeGreaterThan(0);
+  });
+
+  it("conta municípios únicos com casos", () => {
+    expect(uniqueMunicipalitiesCount(fixtureObservations)).toBe(2);
   });
 });
