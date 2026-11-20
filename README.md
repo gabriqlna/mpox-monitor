@@ -56,7 +56,9 @@ As notícias são exibidas como contexto e nunca alteram o total de casos confir
 
 1. O adapter oficial atual baixa `MPX_2026_OPENDATASUS.csv.zip` do Portal de Dados Abertos do SUS.
 2. O parser considera `classi_fin=1` como caso confirmado, conforme o dicionário oficial, e agrega por UF/município.
-3. Implementar a persistência PostgreSQL/Supabase para guardar histórico entre coletas.
-4. Configurar `DATA_MODE=live` e publicar o frontend pela integração GitHub + Vercel.
+3. No Supabase, abra SQL Editor e execute `supabase/migrations/0001_initial_schema.sql`.
+4. Configure `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY` localmente, no GitHub Actions e na Vercel. Nunca os coloque no Git.
+5. Execute `DATA_MODE=live npm run ingest` para salvar os dados oficiais.
+6. Importe `gabriqlna/mpox-monitor` na Vercel e configure `DATA_MODE=live`.
 
 Nunca coloque `.env`, tokens ou chaves de banco no repositório.

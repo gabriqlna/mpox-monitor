@@ -53,3 +53,7 @@ alter table sources enable row level security;
 alter table observations enable row level security;
 alter table news_items enable row level security;
 alter table ingestion_runs enable row level security;
+
+create policy "public read sources" on sources for select using (true);
+create policy "public read observations" on observations for select using (true);
+create policy "public read news" on news_items for select using (true);

@@ -18,5 +18,6 @@ jobs:
       - run: npm run ingest
         env:
           DATA_MODE: live
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          INGEST_TOKEN: ${{ secrets.INGEST_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          APP_TIME_ZONE: America/Sao_Paulo
