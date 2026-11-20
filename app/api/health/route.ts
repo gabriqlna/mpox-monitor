@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import { fixtureObservations } from "@/lib/data";
 import { latestCollection } from "@/lib/aggregations";
+import { getDashboardData } from "@/lib/server-data";
 
-export function GET() {
-  return NextResponse.json({
-    status: "ok",
-    mode: "fixture",
-    latestCollection: latestCollection(fixtureObservations),
-  });
+export async function GET() {
+  try {
+    const dashboard = await getDashboardData();
+    return NextResponse.json({ status: "ok", mode: dashboard.mode, latestCollection: latestCollection(dashboard.observations) });
+  } catch (error) {
+    return NextResponse.json({ status: "error", error: error instanceof Error ? error.message : "Falha na fonte oficial" }, { status: 503 });
+  }
 }

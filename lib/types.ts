@@ -43,3 +43,9 @@ export interface StateSummary {
   name: string;
   value: number;
 }
+
+export interface OfficialSourceFile {
+  url: string;
+  year: number;
+  updatedAt: string;
+}

@@ -2,7 +2,7 @@
 
 Painel público em português para acompanhar dados agregados e notícias relacionadas à mpox no Brasil.
 
-> O projeto inicia em modo demonstração. Os números em `data/fixtures` são ilustrativos e não representam uma fonte epidemiológica real.
+> O projeto inicia em modo demonstração. Em produção, `DATA_MODE=live` baixa o arquivo CSV oficial e público do e-SUS Sinan/Mpox, do Ministério da Saúde. Os números em `data/fixtures` são ilustrativos e não representam uma fonte epidemiológica real.
 
 ## Rodar localmente
 
@@ -13,11 +13,17 @@ npm run dev
 
 Abra `http://localhost:3000`.
 
-Para iniciar no Termux e manter o processo mesmo ao minimizar o aplicativo:
+Para iniciar no Termux em modo oficial e manter o processo mesmo ao minimizar o aplicativo:
 
 ```bash
 npm run start:termux
 npm run stop:termux
+```
+
+O comando usa `DATA_MODE=live` por padrão e baixa o arquivo oficial do Ministério da Saúde. Para testar sem internet usando as fixtures:
+
+```bash
+DATA_MODE=fixture npm run start:termux
 ```
 
 O script grava o log em `.next/termux.log` e usa `termux-wake-lock` quando disponível. Para acompanhar o log:
@@ -48,9 +54,9 @@ As notícias são exibidas como contexto e nunca alteram o total de casos confir
 
 ## Próximas etapas
 
-1. Confirmar endpoints, periodicidade, licença e definições das fontes oficiais.
-2. Implementar o adapter oficial real e a persistência PostgreSQL/Supabase.
-3. Configurar secrets no GitHub Actions e variáveis server-side na Vercel.
-4. Publicar o frontend pela integração GitHub + Vercel.
+1. O adapter oficial atual baixa `MPX_2026_OPENDATASUS.csv.zip` do Portal de Dados Abertos do SUS.
+2. O parser considera `classi_fin=1` como caso confirmado, conforme o dicionário oficial, e agrega por UF/município.
+3. Implementar a persistência PostgreSQL/Supabase para guardar histórico entre coletas.
+4. Configurar `DATA_MODE=live` e publicar o frontend pela integração GitHub + Vercel.
 
 Nunca coloque `.env`, tokens ou chaves de banco no repositório.

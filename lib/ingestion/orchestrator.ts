@@ -1,4 +1,6 @@
 import { fixtureNews, fixtureObservations } from "@/lib/data";
+import { config } from "@/lib/config";
+import { fetchOfficialObservations } from "@/lib/ingestion/official-source";
 
 export interface IngestionResult {
   observations: number;
@@ -8,9 +10,11 @@ export interface IngestionResult {
 }
 
 export async function runIngestion(): Promise<IngestionResult> {
+  const observations = config.dataMode === "live" ? await fetchOfficialObservations() : fixtureObservations;
+  const news = config.dataMode === "live" ? [] : fixtureNews;
   const result = {
-    observations: fixtureObservations.length,
-    news: fixtureNews.length,
+    observations: observations.length,
+    news: news.length,
     collectedAt: new Date().toISOString(),
     status: "success" as const,
   };

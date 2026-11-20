@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { fixtureSources } from "@/lib/data";
+import { getDashboardData } from "@/lib/server-data";
 
-export function GET() {
-  return NextResponse.json({ data: fixtureSources, mode: "fixture" });
+export async function GET() {
+  const dashboard = await getDashboardData();
+  return NextResponse.json({ data: dashboard.sources, mode: dashboard.mode });
 }

@@ -14,15 +14,18 @@
     "stop:termux": "bash scripts/stop-termux.sh"
   },
   "dependencies": {
+    "adm-zip": "^0.5.16",
+    "csv-parse": "^5.6.0",
+    "lucide-react": "^0.468.0",
     "next": "^15.5.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "lucide-react": "^0.468.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
+    "@types/adm-zip": "^0.5.8",
     "@types/node": "^22.15.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",

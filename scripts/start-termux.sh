@@ -6,6 +6,7 @@ PROJECT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
 LOG_FILE="$PROJECT_DIR/.next/termux.log"
 PID_FILE="$PROJECT_DIR/.next/termux.pid"
 PORT="${PORT:-3000}"
+export DATA_MODE="${DATA_MODE:-live}"
 
 mkdir -p "$PROJECT_DIR/.next"
 
